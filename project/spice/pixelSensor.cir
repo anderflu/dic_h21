@@ -60,6 +60,8 @@ C1 VG VSS 1p
 .ENDS
 
 .SUBCKT SENSOR VRESET VSTORE ERASE EXPOSE VDD VSS
+M1 VD
+
 
 * Capacitor to model gate-source capacitance
 C1 VSTORE VSS 100f
