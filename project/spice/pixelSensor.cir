@@ -60,8 +60,8 @@ C1 VG VSS 1p
 .ENDS
 
 .SUBCKT SENSOR VRESET VSTORE ERASE EXPOSE VDD VSS
-M1 VD
-
+M1 VRESET  "GATE" "Source" nmos w= l=
+M2 Rleak  "GATE" C1 nmos w= l=
 
 * Capacitor to model gate-source capacitance
 C1 VSTORE VSS 100f
