@@ -1,26 +1,24 @@
 // State machine using pixelArray
-// This should control RESET, EXPOSURE, ADC and READOUT of the pixelarray
+// This state machine will control:
+// - reset
+// - exposure
+// - DAC
+// - readout of pixel array
 
+// Include the pixel array
+`include "pixelArray.v";
+`include "pixelSensorFsm.fl";
 
-   always_ff @(negedge clk ) begin
-      case(state)
-        STATE1: begin
-           erase <= 1;
-           read <= 0;
-           expose <= 0;
-           convert <= 0;
-        end
-        STATE2: begin
-           erase <= 0;
-           read <= 0;
-           expose <= 1;
-           convert <= 0;
-        end
-        STATE3: begin
-           erase <= 0;
-           read <= 0;
-           expose <= 0;
-           convert = 1;
-        end
-      endcase // case (state)
-   end // always @ (state)
+module pixelArrayState (
+    input logic clk,
+    input logic reset,
+    input logic erase,
+    input logic expose,
+    input logic read,
+    input logic convert
+);
+
+// Have some kind of input that has the values of line 52 in pixelSensorFsm.v
+// This value will define what state the state machine will be in for the pixel sensor
+    
+endmodule
