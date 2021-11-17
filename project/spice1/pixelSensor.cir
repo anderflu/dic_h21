@@ -59,11 +59,7 @@ M3 DMEM VG VSS VSS nmos  w=1u  l=0.13u
 C1 VG VSS 1p
 .ENDS
 
-* Make the sensor like the given figure
 .SUBCKT SENSOR VRESET VSTORE ERASE EXPOSE VDD VSS
-* MXXX <drain> <gate> <source> <bulk> <type> w=0.4u l=0.13u
-M1 VRESET ERASE VSTORE VSS nmos w=0.4u l=0.13u
-M2 Rleak EXPOSE VSTORE VSS nmos w=0.4u l=0.13u
 
 * Capacitor to model gate-source capacitance
 C1 VSTORE VSS 100f
@@ -79,17 +75,7 @@ BR2 VPG VSTORE I=V(EXPOSE)*V(VSTORE,VPG)/1k
 Rphoto VPG VSS 1G
 .ENDS
 
-* Make the comparator like the given figure
 .SUBCKT COMP VCMP_OUT VSTORE VRAMP VDD VSS
-M1 M1D M1D VDD VSS pmos w=0.4u l=0.13u
-M2 M1D VSTORE M2S VSS nmos w=0.4u l=0.13u
-M3 M3D M1D VDD VSS pmos w=0.4u l=0.13u
-M4 M3D VRAMP M2S VSS nmos w=0.4u l=0.13u
-M5 M2S <BIAS1> VSS VSS nmos w=0.4u l=0.13u
-M6 M6D M3D VDD VSS pmos w=0.4u l=0.13u
-M7 M6D <BIAS2> VSS VSS nmos w=0.4u l=0.13u
-M8 VCMP_OUT M6D VDD VSS pmos w=0.4u l=0.13u
-M9 VCMP_OUT M6D VSS VSS nmos w=0.4u l=0.13u
 
 * Model comparator
 BC1 VCMP_OUT VSS V = ((atan(100000*(V(VSTORE) - V(VRAMP)))) + 1.58)/3.14*1.5

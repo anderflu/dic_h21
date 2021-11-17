@@ -128,7 +128,7 @@ module pixelSensor_tb;
    //TODO: The counter should probably be an always_comb. Might be a good idea
    //to also reset the counter from the state machine, i.e provide the count
    //down value, and trigger on 0
-   always_ff @(posedge clk or posedge reset) begin
+   always_comb begin
       if(reset) begin
          state = IDLE;
          next_state = ERASE;
@@ -139,29 +139,29 @@ module pixelSensor_tb;
          case (state)
            ERASE: begin
               if(counter == c_erase) begin
-                 next_state <= EXPOSE;
-                 state <= IDLE;
+                 next_state = EXPOSE;
+                 state = IDLE;
               end
            end
            EXPOSE: begin
               if(counter == c_expose) begin
-                 next_state <= CONVERT;
-                 state <= IDLE;
+                 next_state = CONVERT;
+                 state = IDLE;
               end
            end
            CONVERT: begin
               if(counter == c_convert) begin
-                 next_state <= READ;
-                 state <= IDLE;
+                 next_state = READ;
+                 state = IDLE;
               end
            end
            READ:
              if(counter == c_read) begin
-                state <= IDLE;
-                next_state <= ERASE;
+                state = IDLE;
+                next_state = ERASE;
              end
            IDLE:
-             state <= next_state;
+             state = next_state;
          endcase // case (state)
          if(state == IDLE)
            counter = 0;

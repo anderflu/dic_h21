@@ -25,11 +25,6 @@
 **  SOFTWARE.
 **
 **********************************************************************
-**********************************************************************
-**********************************************************************
-**********************************************************************
-**  Our task: Making the design from the paper (fig. 4)
-**********************************************************************
 
 .SUBCKT PIXEL_SENSOR VBN1 VRAMP VRESET ERASE EXPOSE READ
 + DATA_7 DATA_6 DATA_5 DATA_4 DATA_3 DATA_2 DATA_1 DATA_0 VDD VSS
@@ -65,10 +60,12 @@ C1 VG VSS 1p
 .ENDS
 
 .SUBCKT SENSOR VRESET VSTORE ERASE EXPOSE VDD VSS
-
+* Weak inversion
+*M1 VRESET ERASE VSTORE VSS nmos w=0.5u l=0.5u
+*M2 VPG EXPOSE VSTORE VSS nmos w=0.5u l=0.5u
 * Capacitor to model gate-source capacitance
 C1 VSTORE VSS 100f
-Rleak VSTORE VSS 100T
+leak VSTORE VSS 100T
 
 * Switch to reset voltage on capacitor
 BR1 VRESET VSTORE I=V(ERASE)*V(VRESET,VSTORE)/1k
@@ -81,6 +78,29 @@ Rphoto VPG VSS 1G
 .ENDS
 
 .SUBCKT COMP VCMP_OUT VSTORE VRAMP VDD VSS
+* Current mirror 1
+*Strong inversion because lecture says so and strong inversion is more stable
+M1 M1D M1D VDD VDD pmos w=0.5u l=0.5u 
+M3 M3D M1D VDD VDD pmos w=0.5u l=0.5u 
+
+* Differential pair
+* The signal goes through here and needs to respond quick to changes. Therefore weak inversion is good
+M2 M1D VSTORE M2S VSS nmos w=0.5u l=0.15u
+M4 M3D VRAMP M2S VSS nmos w=0.5u l=0.15u
+
+* Not a current mirror
+* Signal does not go through here. Strong is stable is good
+M5 M2S 5V VSS VSS nmos w=0.5u l=0.5u
+M7 M6D 5V VSS VSS nmos w=0.5u l=0.5u
+
+* Source follower
+* Signal goes here, be weak, be quick
+M6 M6D M3D VDD VDD pmos w=0.5u l=0.15u
+
+* Inverter
+M8 VCMP_OUT M6D VDD VDD pmos w=0.5u l=0.5u
+M9 VCMP_OUT M6D VSS VSS nmos w=0.5u l=0.5u
+
 
 * Model comparator
 BC1 VCMP_OUT VSS V = ((atan(100000*(V(VSTORE) - V(VRAMP)))) + 1.58)/3.14*1.5
